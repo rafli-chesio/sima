@@ -1,0 +1,68 @@
+[
+  {
+    "id": "00bf0493-65a6-4413-90e4-bf3d69f7c000",
+    "userId": "e2a46ba9-3a4b-42af-9f95-f69bf8be769c",
+    "type": "NEW_REQUEST",
+    "title": "Pengajuan Peminjaman Baru",
+    "message": "Kajur mengajukan peminjaman aset (Qty: 1). Menunggu persetujuan Anda.",
+    "isRead": true,
+    "relatedAssetId": "abea1d57-42c7-4333-92af-cdfa8db01a43",
+    "createdAt": "2026-05-10T02:47:59.862Z",
+    "updatedAt": "2026-05-10T02:47:59.862Z"
+  },
+  {
+    "id": "33d7e525-0438-45a1-a9bf-cc2f48d07914",
+    "userId": "a6a41b2d-893d-45c6-9505-672d723192a4",
+    "type": "APPROVED",
+    "title": "Peminjaman Disetujui",
+    "message": "Peminjaman aset Laptop telah disetujui.",
+    "isRead": false,
+    "relatedAssetId": "abea1d57-42c7-4333-92af-cdfa8db01a43",
+    "createdAt": "2026-05-10T02:49:49.943Z",
+    "updatedAt": "2026-05-10T02:49:49.943Z"
+  },
+  {
+    "id": "64cb8e93-8f75-446c-9692-93c503c35317",
+    "userId": "a6a41b2d-893d-45c6-9505-672d723192a4",
+    "type": "APPROVED",
+    "title": "Peminjaman Disetujui",
+    "message": "Peminjaman aset Spidol telah disetujui.",
+    "isRead": false,
+    "relatedAssetId": "35890a35-e8eb-49cc-a1ec-bec26235008a",
+    "createdAt": "2026-05-10T13:19:09.297Z",
+    "updatedAt": "2026-05-10T13:19:09.297Z"
+  },
+  {
+    "id": "702a16c7-044e-4392-8a07-7214e6af8169",
+    "userId": "e2a46ba9-3a4b-42af-9f95-f69bf8be769c",
+    "type": "NEW_REQUEST",
+    "title": "Pengajuan Peminjaman Baru",
+    "message": "Kajur mengajukan peminjaman aset (Qty: 3). Menunggu persetujuan Anda.",
+    "isRead": true,
+    "relatedAssetId": "35890a35-e8eb-49cc-a1ec-bec26235008a",
+    "createdAt": "2026-05-10T13:18:26.260Z",
+    "updatedAt": "2026-05-10T13:18:26.260Z"
+  },
+  {
+    "id": "a1b6beae-59cb-4369-9923-f2e0719fcff9",
+    "userId": "e2a46ba9-3a4b-42af-9f95-f69bf8be769c",
+    "type": "NEW_REQUEST",
+    "title": "Pengajuan Peminjaman Baru",
+    "message": "Kajur mengajukan peminjaman aset (Qty: 1). Menunggu persetujuan Anda.",
+    "isRead": false,
+    "relatedAssetId": "35890a35-e8eb-49cc-a1ec-bec26235008a",
+    "createdAt": "2026-05-10T13:28:12.912Z",
+    "updatedAt": "2026-05-10T13:28:12.912Z"
+  },
+  {
+    "id": "231867b4-8925-4b2e-943e-7cc1d0d9c472",
+    "userId": "a6a41b2d-893d-45c6-9505-672d723192a4",
+    "type": "APPROVED",
+    "title": "Peminjaman Disetujui",
+    "message": "Peminjaman aset Spidol telah disetujui.",
+    "isRead": false,
+    "relatedAssetId": "35890a35-e8eb-49cc-a1ec-bec26235008a",
+    "createdAt": "2026-05-10T13:28:38.468Z",
+    "updatedAt": "2026-05-10T13:28:38.468Z"
+  }
+]

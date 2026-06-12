@@ -3,8 +3,15 @@
 import { useState, useEffect } from "react";
 import { getUnreadNotifications, markAsRead } from "@/app/actions/notifications";
 
+interface NotificationItem {
+  id: string;
+  title: string;
+  message: string;
+  createdAt: string | Date;
+}
+
 export function NotificationBell() {
-  const [notifications, setNotifications] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {

@@ -7,7 +7,8 @@ import {
   text,
   boolean,
   date,
-  primaryKey
+  primaryKey,
+  bigint
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
@@ -19,7 +20,7 @@ export const AssetStatusEnum = ['AVAILABLE', 'BORROWED', 'MAINTENANCE', 'LOST', 
 export const ImageTypeEnum = ['DETAIL', 'AWAL', 'AKHIR', 'KERUSAKAN'] as const;
 export const ApprovalStatusEnum = ['PENDING', 'APPROVED', 'REJECTED'] as const;
 export const FinalStatusEnum = ['ACTIVE', 'RETURNED', 'OVERDUE'] as const;
-export const ActionTypeEnum = ['CREATE', 'EDIT', 'MUTATION', 'BORROW', 'APPROVE', 'RETURN', 'DAMAGED', 'IMPORT', 'SOFT_DELETE'] as const;
+export const ActionTypeEnum = ['CREATE', 'EDIT', 'MUTATION', 'BORROW', 'APPROVE', 'RETURN', 'DAMAGED', 'IMPORT', 'SOFT_DELETE', 'STOCK_ADD'] as const;
 export const NotificationTypeEnum = ['NEW_REQUEST', 'OVERDUE', 'APPROVED', 'REJECTED', 'SYSTEM'] as const;
 
 export const users = pgTable('users', {
@@ -69,6 +70,22 @@ export const assets = pgTable('assets', {
   qrCode: text('qr_code'),
   jurusanId: uuid('jurusan_id').references(() => jurusan.id),
   locationId: uuid('location_id').references(() => locations.id),
+  
+  // KIB specific columns
+  kibCategory: varchar('kib_category', { length: 50 }), // KIB_A, KIB_B, KIB_C
+  kibType: varchar('kib_type', { length: 50 }), // INTRA, EXTRA
+  kodeBarang: varchar('kode_barang', { length: 255 }),
+  noRegister: varchar('no_register', { length: 255 }),
+  harga: bigint('harga', { mode: 'number' }),
+  asalUsul: varchar('asal_usul', { length: 255 }),
+  luasM2: varchar('luas_m2', { length: 255 }),
+  letakAlamat: text('letak_alamat'),
+  statusTanah: varchar('status_tanah', { length: 255 }),
+  bahan: varchar('bahan', { length: 255 }),
+  luasLantai: varchar('luas_lantai', { length: 255 }),
+  konstruksiTingkat: varchar('konstruksi_tingkat', { length: 255 }),
+  konstruksiBeton: varchar('konstruksi_beton', { length: 255 }),
+
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
   deletedAt: timestamp('deleted_at'),
@@ -96,6 +113,8 @@ export const transactions = pgTable('transactions', {
   notes: text('notes'),
   quantity: integer('quantity').notNull().default(1),
   statusFinal: varchar('status_final', { length: 50 }),
+  returnPhotoUrl: varchar('return_photo_url', { length: 255 }),
+  status: varchar('status', { length: 50 }).notNull().default('DIPINJAM'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -164,6 +183,13 @@ export const assetsRelations = relations(assets, ({ one, many }) => ({
   images: many(assetImages),
   transactions: many(transactions),
   history: many(assetHistory),
+}));
+
+export const assetImagesRelations = relations(assetImages, ({ one }) => ({
+  asset: one(assets, {
+    fields: [assetImages.assetId],
+    references: [assets.id],
+  }),
 }));
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({

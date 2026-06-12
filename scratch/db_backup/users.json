@@ -1,0 +1,22 @@
+[
+  {
+    "id": "e2a46ba9-3a4b-42af-9f95-f69bf8be769c",
+    "name": "Super Admin",
+    "email": "admin@simma.com",
+    "password": "$2b$10$KqbGA4bf7B6KDxrFULL5Iu.cWwBfl6isMqtRI0jAoyATMNzAbOoDO",
+    "role": "ADMIN",
+    "createdAt": "2026-05-09T11:56:21.470Z",
+    "updatedAt": "2026-05-09T11:56:21.470Z",
+    "deletedAt": null
+  },
+  {
+    "id": "a6a41b2d-893d-45c6-9505-672d723192a4",
+    "name": "Fahmy Syahputra",
+    "email": "fahmy@gmail.com",
+    "password": "$2b$10$J7H.ig.nxGXF41BEpCqYBOQtDGfPR4AbeXRX3N28LqJzd.56V8Ih6",
+    "role": "KAJUR",
+    "createdAt": "2026-05-09T12:36:15.816Z",
+    "updatedAt": "2026-05-09T12:36:15.816Z",
+    "deletedAt": null
+  }
+]

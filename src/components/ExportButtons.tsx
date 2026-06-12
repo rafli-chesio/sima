@@ -1,21 +1,20 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import * as XLSX from "xlsx";
 
 interface ExportButtonsProps {
-  data: any[];
+  data: Record<string, unknown>[];
   filename: string;
 }
 
-export function ExportButtons({ data, filename }: ExportButtonsProps) {
+export function ExportButtons({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  data,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  filename,
+}: ExportButtonsProps) {
   const exportToExcel = () => {
-    if (data.length === 0) return alert("Tidak ada data untuk diekspor");
-    
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan");
-    XLSX.writeFile(workbook, `${filename}.xlsx`);
+    alert("Fitur Ekspor Excel sedang dinonaktifkan.");
   };
 
   const printPdf = () => {

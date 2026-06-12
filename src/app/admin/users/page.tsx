@@ -3,8 +3,14 @@ import { users, jurusan } from "@/db/schema";
 import { createUser, deleteUser } from "@/app/actions/users";
 import { Button } from "@/components/ui/button";
 import { isNull } from "drizzle-orm";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function UsersPage() {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    redirect("/dashboard");
+  }
   const usersData = await db.query.users.findMany({
     where: isNull(users.deletedAt),
     with: {

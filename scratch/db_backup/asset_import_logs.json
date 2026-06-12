@@ -1,0 +1,52 @@
+[
+  {
+    "id": "ba164e09-5900-4c13-895d-af1195257ca2",
+    "fileName": "KIB B.xlsx",
+    "successCount": 1487,
+    "failedCount": 2,
+    "errorDetails": [
+      {
+        "row": 2,
+        "error": "Nama Barang wajib diisi",
+        "rowData": {
+          "No.": "",
+          "Bahan": "",
+          "__EMPTY": "Aplikasi",
+          "Asal Usul": "",
+          "Keterangan*": "",
+          "Kode Barang": "",
+          "Merk / Type": "",
+          "Ukuran / CC": "",
+          "Jumlah Barang": "",
+          "Nomor Register": "",
+          "Tahun Pembelian": "",
+          "Harga \r\n(ribuan Rp)": "",
+          "Kondisi \r\n(B, KB, RB)": "Riil",
+          "Jenis barang/ Nama Barang": ""
+        }
+      },
+      {
+        "row": 1489,
+        "error": "Nama Barang wajib diisi",
+        "rowData": {
+          "No.": "",
+          "Bahan": "",
+          "__EMPTY": "",
+          "Asal Usul": "",
+          "Keterangan*": "",
+          "Kode Barang": "",
+          "Merk / Type": "",
+          "Ukuran / CC": "",
+          "Jumlah Barang": "",
+          "Nomor Register": "",
+          "Tahun Pembelian": "",
+          "Harga \r\n(ribuan Rp)": 13377352306,
+          "Kondisi \r\n(B, KB, RB)": "",
+          "Jenis barang/ Nama Barang": ""
+        }
+      }
+    ],
+    "importedBy": "e2a46ba9-3a4b-42af-9f95-f69bf8be769c",
+    "createdAt": "2026-05-20T13:39:15.333Z"
+  }
+]

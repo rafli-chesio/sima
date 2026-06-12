@@ -6,6 +6,8 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { writeFile, mkdir } from "fs/promises";
+import path from "path";
 
 export async function createBorrowRequest(formData: FormData): Promise<void> {
   const session = await auth();
@@ -132,3 +134,137 @@ export async function approveRequest(transactionId: string): Promise<void> {
   }
   redirect("/admin/requests");
 }
+
+export async function uploadReturnPhoto(formData: FormData): Promise<string> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const file = formData.get("file") as File;
+  if (!file || file.size === 0) {
+    throw new Error("File bukti fisik wajib diunggah.");
+  }
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const filename = `return-${Date.now()}-${file.name.replace(/\s/g, "_")}`;
+  const uploadDir = path.join(process.cwd(), "public", "uploads");
+
+  try {
+    await mkdir(uploadDir, { recursive: true });
+  } catch (err) {
+    // directory already exists
+  }
+
+  const filepath = path.join(uploadDir, filename);
+  await writeFile(filepath, buffer);
+
+  return `/uploads/${filename}`;
+}
+
+export async function returnAssetAction(
+  transactionId: string,
+  kondisiKembali: 'B' | 'KB' | 'RB',
+  returnPhotoUrl: string
+): Promise<{ success: boolean; message: string }> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  // Map input to DB enums
+  const conditionMap = {
+    B: "BAIK",
+    KB: "RUSAK_RINGAN",
+    RB: "RUSAK_BERAT",
+  } as const;
+
+  const dbKondisi = conditionMap[kondisiKembali];
+  if (!dbKondisi) {
+    throw new Error("Kondisi tidak valid");
+  }
+
+  try {
+    await db.transaction(async (tx) => {
+      // 1. Get transaction and verify
+      const dbTx = await tx.query.transactions.findFirst({
+        where: eq(transactions.id, transactionId),
+        with: { asset: true },
+      });
+
+      if (!dbTx) {
+        throw new Error("Data peminjaman tidak ditemukan");
+      }
+
+      if (dbTx.approvalStatus !== "APPROVED" || dbTx.statusFinal !== "ACTIVE") {
+        throw new Error("Status peminjaman tidak sedang aktif");
+      }
+
+      // 2. Update transaction
+      await tx
+        .update(transactions)
+        .set({
+          statusFinal: "RETURNED",
+          tanggalKembaliReal: new Date().toISOString().split("T")[0],
+          returnPhotoUrl,
+          status: "DIKEMBALIKAN",
+          updatedAt: new Date(),
+        })
+        .where(eq(transactions.id, transactionId));
+
+      // 3. Update asset stock and condition
+      const asset = dbTx.asset;
+      if (asset.assetType === "FIXED") {
+        await tx
+          .update(assets)
+          .set({
+            status: "AVAILABLE",
+            kondisi: dbKondisi,
+            updatedAt: new Date(),
+          })
+          .where(eq(assets.id, asset.id));
+      } else {
+        // CONSUMABLE
+        await tx
+          .update(assets)
+          .set({
+            quantity: asset.quantity + dbTx.quantity,
+            kondisi: dbKondisi,
+            updatedAt: new Date(),
+          })
+          .where(eq(assets.id, asset.id));
+      }
+
+      // 4. Insert history
+      await tx.insert(assetHistory).values({
+        assetId: asset.id,
+        performedBy: session.user.id,
+        actionType: "RETURN",
+        notes: `Pengembalian aset. Kondisi kembali: ${dbKondisi}. Jumlah: ${dbTx.quantity}`,
+      });
+
+      // 5. Optionally create a notification for admins
+      const admins = await tx.query.users.findMany({ where: eq(users.role, "ADMIN") });
+      if (admins.length > 0) {
+        const notifs = admins.map(admin => ({
+          userId: admin.id,
+          type: "SYSTEM" as const,
+          title: "Pengembalian Aset",
+          message: `Kajur telah mengembalikan aset ${asset.namaBarang} (Kondisi: ${dbKondisi}).`,
+          relatedAssetId: asset.id,
+        }));
+        await tx.insert(notifications).values(notifs);
+      }
+    });
+
+    revalidatePath("/dashboard");
+    revalidatePath("/kajur/requests");
+    revalidatePath("/admin/requests");
+
+    return { success: true, message: "Aset berhasil dikembalikan" };
+  } catch (error) {
+    console.error("Error in returnAssetAction:", error);
+    return { success: false, message: (error as Error).message || "Gagal mengembalikan aset" };
+  }
+}
+

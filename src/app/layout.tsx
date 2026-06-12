@@ -20,10 +20,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} font-sans h-full antialiased`}
+      className={`${outfit.variable} font-sans h-full antialiased dark`}
       suppressHydrationWarning
     >
+      <head />
       <body className="min-h-full flex flex-col" suppressHydrationWarning>{children}</body>
     </html>
   );
 }
+
+

@@ -3,8 +3,14 @@ import { jurusan } from "@/db/schema";
 import { createJurusan, deleteJurusan } from "@/app/actions/jurusan";
 import { Button } from "@/components/ui/button";
 import { isNull } from "drizzle-orm";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function JurusanPage() {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    redirect("/dashboard");
+  }
   const data = await db.select().from(jurusan).where(isNull(jurusan.deletedAt)).orderBy(jurusan.createdAt);
 
   return (

@@ -1,0 +1,53 @@
+[
+  {
+    "id": "e290f382-96b8-4e7b-9eff-d920ca2ca238",
+    "assetId": "abea1d57-42c7-4333-92af-cdfa8db01a43",
+    "borrowerId": "a6a41b2d-893d-45c6-9505-672d723192a4",
+    "tanggalPinjam": "2026-05-09",
+    "batasWaktu": "2026-05-09",
+    "tanggalKembaliReal": null,
+    "approvalStatus": "APPROVED",
+    "approvedBy": "e2a46ba9-3a4b-42af-9f95-f69bf8be769c",
+    "approvedAt": "2026-05-09T19:49:49.924Z",
+    "rejectedReason": null,
+    "notes": "",
+    "quantity": 1,
+    "statusFinal": "ACTIVE",
+    "createdAt": "2026-05-10T02:47:59.828Z",
+    "updatedAt": "2026-05-10T02:47:59.828Z"
+  },
+  {
+    "id": "429a14d9-e1f1-4bc5-b805-55d1007f3895",
+    "assetId": "35890a35-e8eb-49cc-a1ec-bec26235008a",
+    "borrowerId": "a6a41b2d-893d-45c6-9505-672d723192a4",
+    "tanggalPinjam": "2026-05-10",
+    "batasWaktu": "2026-05-10",
+    "tanggalKembaliReal": null,
+    "approvalStatus": "APPROVED",
+    "approvedBy": "e2a46ba9-3a4b-42af-9f95-f69bf8be769c",
+    "approvedAt": "2026-05-10T06:19:09.283Z",
+    "rejectedReason": null,
+    "notes": "",
+    "quantity": 3,
+    "statusFinal": "ACTIVE",
+    "createdAt": "2026-05-10T13:18:26.230Z",
+    "updatedAt": "2026-05-10T13:18:26.230Z"
+  },
+  {
+    "id": "613941b8-93f3-4784-acbb-7cd6452aa955",
+    "assetId": "35890a35-e8eb-49cc-a1ec-bec26235008a",
+    "borrowerId": "a6a41b2d-893d-45c6-9505-672d723192a4",
+    "tanggalPinjam": "2026-05-10",
+    "batasWaktu": "2026-05-19",
+    "tanggalKembaliReal": null,
+    "approvalStatus": "APPROVED",
+    "approvedBy": "e2a46ba9-3a4b-42af-9f95-f69bf8be769c",
+    "approvedAt": "2026-05-10T06:28:38.455Z",
+    "rejectedReason": null,
+    "notes": "",
+    "quantity": 1,
+    "statusFinal": "ACTIVE",
+    "createdAt": "2026-05-10T13:28:12.888Z",
+    "updatedAt": "2026-05-10T13:28:12.888Z"
+  }
+]

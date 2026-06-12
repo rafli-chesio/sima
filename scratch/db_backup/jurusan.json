@@ -1,0 +1,30 @@
+[
+  {
+    "id": "58144303-46b5-4921-b016-46e9af1875bf",
+    "namaJurusan": "RPL",
+    "createdAt": "2026-05-09T12:35:35.303Z",
+    "updatedAt": "2026-05-09T12:35:35.303Z",
+    "deletedAt": null
+  },
+  {
+    "id": "1d13622d-9e1f-48ad-afb3-37a856616510",
+    "namaJurusan": "TKJ",
+    "createdAt": "2026-05-10T04:12:33.369Z",
+    "updatedAt": "2026-05-10T04:12:33.369Z",
+    "deletedAt": null
+  },
+  {
+    "id": "aa2a3abc-7b13-4565-bd25-bf21b481933c",
+    "namaJurusan": "Mulitmedia",
+    "createdAt": "2026-05-10T04:12:39.588Z",
+    "updatedAt": "2026-05-10T04:12:39.588Z",
+    "deletedAt": null
+  },
+  {
+    "id": "72578f49-c8f5-451b-aaea-195153d54b39",
+    "namaJurusan": "Sekolah",
+    "createdAt": "2026-05-20T13:39:03.001Z",
+    "updatedAt": "2026-05-20T13:39:03.001Z",
+    "deletedAt": null
+  }
+]

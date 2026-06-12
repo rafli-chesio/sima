@@ -43,39 +43,40 @@
   --radius-2xl: calc(var(--radius) * 1.8);
 }
 
-/* Base Light Theme - We focus primarily on Dark Theme but keep this valid */
+/* Premium Light Theme (Slate Tint / Crystal Blue) */
 :root {
-  --background: oklch(0.98 0.01 250);
-  --foreground: oklch(0.1 0.02 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --background: oklch(0.975 0.01 250); /* Light slate blue canvas background */
+  --foreground: oklch(0.15 0.03 260);  /* Dark deep slate text */
+  --card: oklch(1 0 0);                /* Pure white card body */
+  --card-foreground: oklch(0.15 0.03 260);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.15 0.03 260);
+  --primary: oklch(0.55 0.18 250);     /* Royal blue/indigo primary */
+  --primary-foreground: oklch(0.99 0 0); /* White */
+  --secondary: oklch(0.94 0.015 250);
+  --secondary-foreground: oklch(0.25 0.05 250);
+  --muted: oklch(0.94 0.015 250);
+  --muted-foreground: oklch(0.5 0.03 250);
+  --accent: oklch(0.93 0.02 250);      /* Soft blue overlay */
+  --accent-foreground: oklch(0.3 0.1 250);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.91 0.015 250);     /* Soft grey-blue borders */
+  --input: oklch(0.91 0.015 250);
+  --ring: oklch(0.55 0.18 250);
   --radius: 0.75rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  
+  --sidebar: oklch(0.99 0.005 250 / 0.85); /* Translucent sidebar */
+  --sidebar-foreground: oklch(0.2 0.03 250);
+  --sidebar-primary: oklch(0.55 0.18 250);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.94 0.015 250);
+  --sidebar-accent-foreground: oklch(0.3 0.1 250);
+  --sidebar-border: oklch(0.91 0.015 250);
+  --sidebar-ring: oklch(0.55 0.18 250);
 }
 
 /* Premium Dark Theme (Midnight Blue / Deep Space) */
-.dark, :root {
+.dark {
   --background: oklch(0.12 0.02 260); /* Deep midnight blue */
   --foreground: oklch(0.98 0 0);
   --card: oklch(0.15 0.02 260); /* Slightly lighter for cards */
@@ -113,9 +114,55 @@
     @apply bg-background text-foreground font-sans antialiased selection:bg-primary/30 selection:text-primary-foreground;
   }
   
-  /* Adding a subtle ambient gradient glow to the background */
+  /* Adding a subtle ambient gradient glow to the background, adapted for light/dark mode */
   body::before {
     content: "";
-    @apply fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/10 via-background to-background pointer-events-none;
+    @apply fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/50 dark:from-blue-900/10 via-background to-background pointer-events-none;
   }
+}
+
+/* Premium Custom Scrollbars - Ensures consistent visibility and ease of use */
+.overflow-x-auto, 
+.overflow-y-auto, 
+.custom-scrollbar {
+  scrollbar-width: auto;
+  scrollbar-color: var(--primary) transparent;
+}
+
+/* Chrome, Edge, Safari scrollbars */
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar,
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; /* Safe size for easy grabbing */
+}
+
+.overflow-x-auto::-webkit-scrollbar-track,
+.overflow-y-auto::-webkit-scrollbar-track,
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 9999px;
+}
+
+.dark .overflow-x-auto::-webkit-scrollbar-track,
+.dark .overflow-y-auto::-webkit-scrollbar-track,
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb,
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.55 0.18 250 / 0.35); /* Soft primary thumb */
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover,
+.overflow-y-auto::-webkit-scrollbar-thumb:hover,
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--primary); /* Full solid primary on hover */
+  border-width: 1px;
 }

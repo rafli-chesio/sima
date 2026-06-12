@@ -3,8 +3,14 @@ import { locations } from "@/db/schema";
 import { createLocation, deleteLocation } from "@/app/actions/locations";
 import { Button } from "@/components/ui/button";
 import { isNull } from "drizzle-orm";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function LocationsPage() {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    redirect("/dashboard");
+  }
   const data = await db.select().from(locations).where(isNull(locations.deletedAt)).orderBy(locations.createdAt);
 
   return (

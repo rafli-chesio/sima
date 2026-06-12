@@ -8,6 +8,27 @@
       "when": 1778302467965,
       "tag": "0000_past_senator_kelly",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1779258207080,
+      "tag": "0001_add_import_fields_and_logs",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1779258220337,
+      "tag": "0002_remove_qr_code",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1779259966089,
+      "tag": "0003_nullable_kode_unik_and_sumber_data",
+      "breakpoints": true
     }
   ]
 }

@@ -3,19 +3,22 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { NotificationBell } from "@/components/NotificationBell";
+import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
+  if (!session) {
+    redirect("/login");
+  }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden bg-background">
       {/* Glassmorphism Sidebar */}
-      <aside className="w-64 bg-sidebar backdrop-blur-xl border-r border-sidebar-border p-6 flex flex-col h-screen sticky top-0 shadow-2xl z-10">
+      <aside className="w-64 bg-sidebar backdrop-blur-xl border-r border-sidebar-border p-6 flex flex-col h-screen z-10 shadow-2xl shrink-0">
         <div className="mb-8 flex items-center gap-3">
           <img src="/Logosekolah.png" alt="Logo Sekolah" className="w-14 h-14 object-contain rounded-xl bg-white p-1" />
           <div>
-            <h1 className="text-xl font-bold tracking-tight bg-gradient-to-br from-white to-zinc-400 bg-clip-text text-transparent">SIMMA</h1>
-            <p className="text-xs text-primary font-medium tracking-wider uppercase">{session?.user?.role || "DASHBOARD"}</p>
+            <h1 className="text-xl font-bold tracking-tight bg-gradient-to-br from-zinc-800 to-zinc-500 dark:from-white dark:to-zinc-400 bg-clip-text text-transparent">SIMMA</h1>
           </div>
         </div>
 
@@ -28,28 +31,30 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </div>
           
           {session?.user?.role === "ADMIN" && (
+            <div className="space-y-1">
+              <p className="px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-2">Master Data</p>
+              {[
+                { href: "/admin/locations", label: "Lokasi" },
+                { href: "/admin/jurusan", label: "Jurusan" },
+                { href: "/admin/users", label: "Pengguna" },
+              ].map((item) => (
+                <Link 
+                  key={item.href} 
+                  href={item.href} 
+                  className="block px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-zinc-800/5 dark:hover:bg-white/5 hover:text-foreground dark:hover:text-white transition-all duration-300 relative group overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="relative z-10">{item.label}</span>
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {(session?.user?.role === "ADMIN" || session?.user?.role === "VIEWER") && (
             <>
               <div className="space-y-1">
-                <p className="px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-2">Master Data</p>
-                {[
-                  { href: "/admin/locations", label: "Lokasi" },
-                  { href: "/admin/jurusan", label: "Jurusan" },
-                  { href: "/admin/users", label: "Pengguna" },
-                ].map((item) => (
-                  <Link 
-                    key={item.href} 
-                    href={item.href} 
-                    className="block px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-white/5 hover:text-white transition-all duration-300 relative group overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <span className="relative z-10">{item.label}</span>
-                  </Link>
-                ))}
-              </div>
-
-              <div className="space-y-1">
                 <p className="px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-2">Inventory</p>
-                <Link href="/admin/assets" className="block px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-white/5 hover:text-white transition-all duration-300 relative group overflow-hidden">
+                <Link href="/admin/assets" className="block px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-zinc-800/5 dark:hover:bg-white/5 hover:text-foreground dark:hover:text-white transition-all duration-300 relative group overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <span className="relative z-10">Aset</span>
                 </Link>
@@ -57,7 +62,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
               <div className="space-y-1">
                 <p className="px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-2">Transactions</p>
-                <Link href="/admin/requests" className="block px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-white/5 hover:text-white transition-all duration-300 relative group overflow-hidden">
+                <Link href="/admin/requests" className="block px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-zinc-800/5 dark:hover:bg-white/5 hover:text-foreground dark:hover:text-white transition-all duration-300 relative group overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <span className="relative z-10">Peminjaman</span>
                 </Link>
@@ -75,7 +80,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
                 <Link 
                   key={item.href} 
                   href={item.href} 
-                  className="block px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-white/5 hover:text-white transition-all duration-300 relative group overflow-hidden"
+                  className="block px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-zinc-800/5 dark:hover:bg-white/5 hover:text-foreground dark:hover:text-white transition-all duration-300 relative group overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <span className="relative z-10">{item.label}</span>
@@ -86,10 +91,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </nav>
 
         <div className="mt-auto border-t border-border pt-6">
-          <div className="mb-4 px-2">
-            <p className="text-sm font-semibold text-white">{session?.user?.name}</p>
-            <p className="text-xs text-muted-foreground truncate">{session?.user?.email}</p>
-          </div>
           <form
             action={async () => {
               "use server";
@@ -104,14 +105,27 @@ export default async function DashboardLayout({ children }: { children: React.Re
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto relative z-0">
-        <header className="sticky top-0 z-20 w-full bg-background/80 backdrop-blur-xl border-b border-white/5 p-4 flex justify-end px-8">
-          <NotificationBell />
+      <main className="flex-1 min-w-0 overflow-y-auto relative z-0 flex flex-col">
+        <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-zinc-200 dark:border-white/5 py-3 px-8 flex justify-between items-center transition-all duration-300 shadow-sm">
+
+          <div className="flex-1">
+            <h1 className="text-xl font-bold tracking-tight text-foreground">Dashboard</h1>
+          </div>
+          <div className="flex items-center gap-4">
+            <NotificationBell />
+            <div className="flex items-center gap-3 border-l border-zinc-200 dark:border-white/10 pl-4">
+              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
+                {session?.user?.name?.charAt(0).toUpperCase() || "U"}
+              </div>
+              <span className="text-sm font-medium text-foreground">{session?.user?.name}</span>
+            </div>
+          </div>
         </header>
-        <div className="p-8 max-w-6xl mx-auto">
+        <div className="p-4 md:p-6 max-w-7xl mx-auto w-full">
           {children}
         </div>
       </main>
     </div>
   );
 }
+

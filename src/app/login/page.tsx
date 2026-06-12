@@ -17,7 +17,7 @@ const loginSchema = z.object({
 export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -44,7 +44,6 @@ export default function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen relative overflow-hidden">
-      {/* Decorative ambient blobs */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[128px] -z-10 pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-[128px] -z-10 pointer-events-none" />
 
@@ -54,7 +53,7 @@ export default function LoginPage() {
           <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-br from-white to-zinc-400 bg-clip-text text-transparent">SIMMA</h1>
           <p className="mt-2 text-sm text-muted-foreground font-medium tracking-wide">Sistem Manajemen Aset Sekolah</p>
         </div>
-        
+
         {error && (
           <div className="p-3 text-sm text-red-400 bg-red-950/30 rounded-xl border border-red-900/30 text-center animate-in fade-in slide-in-from-top-2">
             {error}
@@ -77,7 +76,7 @@ export default function LoginPage() {
               <p className="text-xs text-red-400 mt-1">{form.formState.errors.email.message}</p>
             )}
           </div>
-          
+
           <div className="space-y-2 group">
             <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider" htmlFor="password">
               Password
@@ -94,9 +93,9 @@ export default function LoginPage() {
             )}
           </div>
 
-          <Button 
-            type="submit" 
-            className="w-full py-6 mt-4 text-base font-semibold bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 text-white rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] transition-all duration-300 hover:scale-[1.02]" 
+          <Button
+            type="submit"
+            className="w-full py-6 mt-4 text-base font-semibold bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 text-white rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] transition-all duration-300 hover:scale-[1.02]"
             disabled={form.formState.isSubmitting}
           >
             {form.formState.isSubmitting ? "Authenticating..." : "Sign In"}

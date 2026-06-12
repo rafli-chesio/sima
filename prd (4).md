@@ -248,4 +248,4 @@ Rekomendasi teknologi modern, teruji, dan dioptimalkan untuk standar production 
 ## 10. Roadmap Pengerjaan
 -   **Phase 1 (Core & MVP):** Auth & RBAC, CRUD Aset & Jurusan, Lokasi, Sistem Peminjaman & Approval, Dashboard Dasar, Notifikasi In-App, Validasi Bisnis Dasar. *(Target: Siap uji coba internal)*
 -   **Phase 2 (Audit & Reporting):** Audit Trail Otomatis, History Log, Multi-Upload Foto, Export PDF/Excel, Notification Center Lengkap, Soft Delete, Pagination & Filtering Lanjut. *(Target: Stabil & Siap Produksi)*
--   **Phase 3 (Advanced & Optimization):** Integrasi QR Code (Generate & Scan), Import Excel (Bulk Upload), Maintenance Management, Advanced Analytics, Optimasi Performance & Security Hardening. *(Target: Scaling & Modernisasi)*
+-   **Phase 3 (Advanced & Optimization):**, Import Excel (Bulk Upload), Maintenance Management, Advanced Analytics, Optimasi Performance & Security Hardening. *(Target: Scaling & Modernisasi)*

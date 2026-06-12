@@ -1,0 +1,16 @@
+[
+  {
+    "id": "a66ef278-380f-43cb-a928-9ea7cadb52f1",
+    "namaLokasi": "LAB",
+    "createdAt": "2026-05-09T12:35:46.268Z",
+    "updatedAt": "2026-05-09T12:35:46.268Z",
+    "deletedAt": null
+  },
+  {
+    "id": "9fea80c0-c73e-4585-b5f2-5980ba0ca129",
+    "namaLokasi": "Gudang Utama",
+    "createdAt": "2026-05-20T13:39:03.031Z",
+    "updatedAt": "2026-05-20T13:39:03.031Z",
+    "deletedAt": null
+  }
+]
