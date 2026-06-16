@@ -20,7 +20,7 @@ export const AssetStatusEnum = ['AVAILABLE', 'BORROWED', 'MAINTENANCE', 'LOST', 
 export const ImageTypeEnum = ['DETAIL', 'AWAL', 'AKHIR', 'KERUSAKAN'] as const;
 export const ApprovalStatusEnum = ['PENDING', 'APPROVED', 'REJECTED'] as const;
 export const FinalStatusEnum = ['ACTIVE', 'RETURNED', 'OVERDUE'] as const;
-export const ActionTypeEnum = ['CREATE', 'EDIT', 'MUTATION', 'BORROW', 'APPROVE', 'RETURN', 'DAMAGED', 'IMPORT', 'SOFT_DELETE', 'STOCK_ADD'] as const;
+export const ActionTypeEnum = ['CREATE', 'EDIT', 'MUTATION', 'BORROW', 'APPROVE', 'RETURN', 'DAMAGED', 'IMPORT', 'SOFT_DELETE', 'STOCK_ADD', 'CONSUMABLE_REQUEST', 'CONSUMABLE_APPROVE', 'CONSUMABLE_REJECT'] as const;
 export const NotificationTypeEnum = ['NEW_REQUEST', 'OVERDUE', 'APPROVED', 'REJECTED', 'SYSTEM'] as const;
 
 export const users = pgTable('users', {
@@ -149,6 +149,8 @@ export const usersRelations = relations(users, ({ many }) => ({
   approvedTransactions: many(transactions, { relationName: 'approver' }),
   history: many(assetHistory),
   notifications: many(notifications),
+  consumableRequests: many(consumableRequests, { relationName: 'requester' }),
+  approvedConsumableRequests: many(consumableRequests, { relationName: 'consumableApprover' }),
 }));
 
 export const jurusanRelations = relations(jurusan, ({ many }) => ({
@@ -183,6 +185,7 @@ export const assetsRelations = relations(assets, ({ one, many }) => ({
   images: many(assetImages),
   transactions: many(transactions),
   history: many(assetHistory),
+  consumableRequests: many(consumableRequests),
 }));
 
 export const assetImagesRelations = relations(assetImages, ({ one }) => ({
@@ -226,3 +229,35 @@ export const notificationsRelations = relations(notifications, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+export const consumableRequests = pgTable('consumable_requests', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  assetId: uuid('asset_id').references(() => assets.id).notNull(),
+  requestedBy: uuid('requested_by').references(() => users.id).notNull(),
+  quantity: integer('quantity').notNull(),
+  notes: text('notes'),
+  approvalStatus: varchar('approval_status', { length: 50 }).notNull().default('PENDING'),
+  approvedBy: uuid('approved_by').references(() => users.id),
+  approvedAt: timestamp('approved_at'),
+  rejectedReason: text('rejected_reason'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const consumableRequestsRelations = relations(consumableRequests, ({ one }) => ({
+  asset: one(assets, {
+    fields: [consumableRequests.assetId],
+    references: [assets.id],
+  }),
+  requester: one(users, {
+    fields: [consumableRequests.requestedBy],
+    references: [users.id],
+    relationName: 'requester',
+  }),
+  approver: one(users, {
+    fields: [consumableRequests.approvedBy],
+    references: [users.id],
+    relationName: 'consumableApprover',
+  }),
+}));
+

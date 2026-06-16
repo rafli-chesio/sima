@@ -60,6 +60,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <span className="relative z-10">Aset</span>
             </Link>
+            <Link href="/admin/consumable-requests" className="block px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-zinc-800/5 dark:hover:bg-white/5 hover:text-foreground dark:hover:text-white transition-all duration-300 relative group overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <span className="relative z-10">Barang Habis Pakai</span>
+            </Link>
           </div>
 
           <div className="space-y-1">

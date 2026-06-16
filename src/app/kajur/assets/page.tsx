@@ -1,15 +1,16 @@
 import { db } from "@/db";
 import { assets, userJurusan } from "@/db/schema";
-import { eq, and, isNull, sql, or, ilike, inArray } from "drizzle-orm";
+import { eq, and, isNull, sql, or, ilike, inArray, isNotNull, desc } from "drizzle-orm";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/auth";
 import { SearchInput } from "@/app/admin/assets/SearchInput";
+import { YearFilter } from "@/app/admin/assets/YearFilter";
 
 export default async function KajurAssetsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tab?: string; page?: string; search?: string }>;
+  searchParams: Promise<{ tab?: string; page?: string; search?: string; tahun?: string }>;
 }) {
   const session = await auth();
   if (!session?.user?.id) {
@@ -32,6 +33,7 @@ export default async function KajurAssetsPage({
   const params = await searchParams;
   const activeKib = params.tab || "ALL";
   const searchQuery = params.search || "";
+  const tahunFilter = params.tahun || "";
 
   // Helper function to build dynamic search & category conditions scoped to this Kajur's department
   const getWhereClause = (category?: "KIB_A" | "KIB_B" | "KIB_C", type?: "INTRA" | "EXTRA") => {
@@ -55,6 +57,10 @@ export default async function KajurAssetsPage({
     
     if (type) {
       conds.push(eq(assets.kibType, type));
+    }
+
+    if (tahunFilter) {
+      conds.push(eq(assets.tahunPengadaan, parseInt(tahunFilter)));
     }
     
     return and(...conds);
@@ -145,6 +151,23 @@ export default async function KajurAssetsPage({
   if (activeKib === "ALL") {
     totalColumns += 1; // Kategori KIB
   }
+  // Fetch available years for the dropdown scoped to Kajur's departments
+  const yearsResult = await db
+    .select({ tahun: assets.tahunPengadaan })
+    .from(assets)
+    .where(
+      and(
+        isNull(assets.deletedAt),
+        isNotNull(assets.tahunPengadaan),
+        inArray(assets.jurusanId, myJurusanIds)
+      )
+    )
+    .groupBy(assets.tahunPengadaan)
+    .orderBy(desc(assets.tahunPengadaan));
+  
+  const availableYears = yearsResult
+    .map((y) => y.tahun)
+    .filter((y): y is number => y !== null);
 
   return (
     <div className="w-full space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -186,6 +209,7 @@ export default async function KajurAssetsPage({
           Daftar Aset ({tabs.find(t => t.id === activeKib)?.label})
         </h2>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <YearFilter years={availableYears} />
           <SearchInput />
         </div>
       </div>

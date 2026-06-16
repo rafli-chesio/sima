@@ -39,6 +39,7 @@ export default async function KajurLayout({ children }: { children: React.ReactN
             {[
               { href: "/kajur/assets", label: "Cari Aset" },
               { href: "/kajur/requests", label: "Riwayat Peminjaman" },
+              { href: "/kajur/consumable-requests", label: "Barang Habis Pakai" },
             ].map((item) => (
               <Link 
                 key={item.href} 

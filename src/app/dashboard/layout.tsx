@@ -58,6 +58,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <span className="relative z-10">Aset</span>
                 </Link>
+                <Link href="/admin/consumable-requests" className="block px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-zinc-800/5 dark:hover:bg-white/5 hover:text-foreground dark:hover:text-white transition-all duration-300 relative group overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="relative z-10">Barang Habis Pakai</span>
+                </Link>
               </div>
 
               <div className="space-y-1">
@@ -76,6 +80,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
               {[
                 { href: "/kajur/assets", label: "Cari Aset" },
                 { href: "/kajur/requests", label: "Riwayat Peminjaman" },
+                { href: "/kajur/consumable-requests", label: "Barang Habis Pakai" },
               ].map((item) => (
                 <Link 
                   key={item.href} 
