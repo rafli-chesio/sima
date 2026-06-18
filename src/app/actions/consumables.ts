@@ -273,3 +273,106 @@ export async function getConsumableRequests() {
 
   return [];
 }
+
+export async function addConsumableAsset(
+  formData: FormData
+): Promise<{ success: boolean; message: string }> {
+  const session = await auth();
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  const namaBarang = formData.get("namaBarang") as string;
+  const merk = formData.get("merk") as string || "";
+  const tahunPengadaanStr = formData.get("tahunPengadaan") as string;
+  let jurusanId = formData.get("jurusanId") as string || "";
+  let locationId = formData.get("locationId") as string || "";
+  const quantityStr = formData.get("quantity") as string;
+  const notes = formData.get("notes") as string || "";
+
+  if (!namaBarang || !quantityStr) {
+    return { success: false, message: "Nama barang dan jumlah stok wajib diisi" };
+  }
+
+  const quantity = parseInt(quantityStr);
+  if (isNaN(quantity) || quantity < 1) {
+    return { success: false, message: "Jumlah stok minimal 1" };
+  }
+
+  const tahunPengadaan = tahunPengadaanStr ? parseInt(tahunPengadaanStr) : new Date().getFullYear();
+
+  try {
+    // 1. Resolve Jurusan (default "Sekolah" or "Umum" if empty)
+    if (!jurusanId) {
+      const defaultJurusan = await db.query.jurusan.findFirst({
+        where: (jurusan, { or, ilike }) => or(
+          ilike(jurusan.namaJurusan, "%sekolah%"),
+          ilike(jurusan.namaJurusan, "%umum%")
+        ),
+      });
+
+      if (defaultJurusan) {
+        jurusanId = defaultJurusan.id;
+      } else {
+        const firstJurusan = await db.query.jurusan.findFirst();
+        if (firstJurusan) {
+          jurusanId = firstJurusan.id;
+        }
+      }
+    }
+
+    // 2. Resolve Location (default "Gudang Utama" if empty)
+    if (!locationId) {
+      const defaultLocation = await db.query.locations.findFirst({
+        where: (locations, { or, ilike }) => or(
+          ilike(locations.namaLokasi, "%gudang utama%"),
+          ilike(locations.namaLokasi, "%gudang%")
+        ),
+      });
+
+      if (defaultLocation) {
+        locationId = defaultLocation.id;
+      } else {
+        const firstLocation = await db.query.locations.findFirst();
+        if (firstLocation) {
+          locationId = firstLocation.id;
+        }
+      }
+    }
+
+    // 3. Generate Kode Unik
+    const kodeUnik = `BHP-${Date.now().toString().slice(-6)}`;
+
+    // 4. Insert Asset
+    const [newAsset] = await db.insert(assets).values({
+      namaBarang,
+      kodeUnik,
+      assetType: "CONSUMABLE",
+      merk: merk || null,
+      tahunPengadaan,
+      quantity,
+      jurusanId: jurusanId || null,
+      locationId: locationId || null,
+      kondisi: "BAIK",
+      status: "AVAILABLE",
+    }).returning({ id: assets.id });
+
+    // 5. Insert History
+    await db.insert(assetHistory).values({
+      assetId: newAsset.id,
+      performedBy: session.user.id,
+      actionType: "CREATE",
+      notes: notes || "Barang habis pakai baru ditambahkan ke sistem",
+    });
+
+    revalidatePath("/admin/consumable-requests");
+    revalidatePath("/kajur/consumable-requests");
+    revalidatePath("/admin/assets");
+    revalidatePath("/kajur/assets");
+
+    return { success: true, message: `Barang habis pakai ${namaBarang} berhasil ditambahkan` };
+  } catch (error) {
+    console.error("Error in addConsumableAsset:", error);
+    return { success: false, message: "Gagal menambahkan barang habis pakai baru" };
+  }
+}

@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { approveConsumableRequest, rejectConsumableRequest } from "@/app/actions/consumables";
+import { approveConsumableRequest, rejectConsumableRequest, addConsumableAsset } from "@/app/actions/consumables";
 
 interface RequestInstance {
   id: string;
@@ -39,10 +39,14 @@ export function AdminConsumableRequestsClient({
   pendingRequests,
   processedRequests,
   isViewer = false,
+  jurusanList = [],
+  locationList = [],
 }: {
   pendingRequests: RequestInstance[];
   processedRequests: RequestInstance[];
   isViewer?: boolean;
+  jurusanList?: { id: string; namaJurusan: string }[];
+  locationList?: { id: string; namaLokasi: string }[];
 }) {
   const [activeTab, setActiveTab] = useState<"pending" | "history">("pending");
   const [isRejectOpen, setIsRejectOpen] = useState(false);
@@ -50,6 +54,24 @@ export function AdminConsumableRequestsClient({
   const [rejectReason, setRejectReason] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
+
+  const handleAddSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setAddError(null);
+
+    const formData = new FormData(e.currentTarget);
+    startTransition(async () => {
+      const res = await addConsumableAsset(formData);
+      if (res.success) {
+        setIsAddOpen(false);
+      } else {
+        setAddError(res.message);
+      }
+    });
+  };
 
   const handleApprove = (id: string) => {
     if (!confirm("Apakah Anda yakin ingin menyetujui permintaan ini? Stok barang akan langsung berkurang.")) return;
@@ -103,6 +125,15 @@ export function AdminConsumableRequestsClient({
             Tinjau pengajuan consumable dan kelola pendistribusian stok barang habis pakai sekolah.
           </p>
         </div>
+        {!isViewer && (
+          <Button
+            onClick={() => setIsAddOpen(true)}
+            className="bg-emerald-600 hover:bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300 rounded-xl px-6 h-10 text-sm font-semibold flex items-center gap-2 cursor-pointer"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Tambah Barang Habis Pakai
+          </Button>
+        )}
       </div>
 
       {/* Tabs Navigation */}
@@ -344,6 +375,144 @@ export function AdminConsumableRequestsClient({
                 className="bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all px-6"
               >
                 {isPending ? "Mengirim..." : "Tolak Pengajuan"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+        <DialogContent className="bg-zinc-950 border border-white/10 text-white max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold text-white flex items-center gap-2">
+              <span className="w-1.5 h-6 bg-emerald-500 rounded-full"></span>
+              Tambah Barang Habis Pakai Baru
+            </DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={handleAddSubmit} className="space-y-4 pt-4 text-sm animate-in fade-in duration-300">
+            {addError && (
+              <div className="p-3 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20 text-xs">
+                {addError}
+              </div>
+            )}
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-zinc-400">
+                Nama Barang <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="text"
+                name="namaBarang"
+                required
+                className="w-full px-4 py-2.5 bg-zinc-900 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-sm"
+                placeholder="Contoh: Sapu Lantai, Spidol Hitam Snowman"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-zinc-400">
+                  Merk / Produsen
+                </label>
+                <input
+                  type="text"
+                  name="merk"
+                  className="w-full px-4 py-2.5 bg-zinc-900 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-sm"
+                  placeholder="Contoh: Snowman, Lion Star"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-zinc-400">
+                  Tahun Pengadaan
+                </label>
+                <input
+                  type="number"
+                  name="tahunPengadaan"
+                  defaultValue={new Date().getFullYear()}
+                  className="w-full px-4 py-2.5 bg-zinc-900 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-zinc-400">
+                  Jurusan Pemilik <span className="text-red-400">*</span>
+                </label>
+                <select
+                  name="jurusanId"
+                  className="w-full px-4 py-2.5 bg-zinc-900 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-sm cursor-pointer"
+                >
+                  <option value="">Sekolah (Default)</option>
+                  {jurusanList.map((j) => (
+                    <option key={j.id} value={j.id}>
+                      {j.namaJurusan}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-zinc-400">
+                  Lokasi Penempatan <span className="text-red-400">*</span>
+                </label>
+                <select
+                  name="locationId"
+                  className="w-full px-4 py-2.5 bg-zinc-900 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-sm cursor-pointer"
+                >
+                  <option value="">Gudang Utama (Default)</option>
+                  {locationList.map((l) => (
+                    <option key={l.id} value={l.id}>
+                      {l.namaLokasi}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-zinc-400">
+                Jumlah Stok <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="number"
+                name="quantity"
+                required
+                min={1}
+                defaultValue={1}
+                className="w-full px-4 py-2.5 bg-zinc-900 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-sm"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-zinc-400">
+                Catatan / Keterangan
+              </label>
+              <textarea
+                name="notes"
+                placeholder="Tambahkan catatan jika diperlukan..."
+                rows={3}
+                className="w-full px-4 py-2.5 bg-zinc-900 border border-white/10 rounded-xl text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-sm"
+              />
+            </div>
+
+            <div className="pt-4 border-t border-white/5 flex justify-end gap-3">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setIsAddOpen(false)}
+                className="hover:bg-white/5 text-zinc-300 rounded-xl"
+              >
+                Batal
+              </Button>
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all px-6"
+              >
+                {isPending ? "Mengirim..." : "Simpan Barang"}
               </Button>
             </div>
           </form>

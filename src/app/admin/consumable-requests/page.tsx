@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { consumableRequests } from "@/db/schema";
+import { consumableRequests, jurusan, locations } from "@/db/schema";
 import { desc } from "drizzle-orm";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
@@ -32,11 +32,17 @@ export default async function AdminConsumableRequestsPage() {
   const pendingRequests = allRequests.filter(r => r.approvalStatus === "PENDING");
   const processedRequests = allRequests.filter(r => r.approvalStatus !== "PENDING");
 
+  // 3. Fetch jurusan and locations list for adding new consumable
+  const jurusanList = await db.select().from(jurusan);
+  const locationList = await db.select().from(locations);
+
   return (
     <AdminConsumableRequestsClient
       pendingRequests={pendingRequests}
       processedRequests={processedRequests}
       isViewer={isViewer}
+      jurusanList={jurusanList}
+      locationList={locationList}
     />
   );
 }
