@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { isNull } from "drizzle-orm";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { ChangePasswordButton } from "./ChangePasswordButton";
+
 
 export default async function UsersPage() {
   const session = await auth();
@@ -130,13 +132,16 @@ export default async function UsersPage() {
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    {user.role !== "ADMIN" && (
-                      <form action={deleteUser.bind(null, user.id)}>
-                        <Button variant="destructive" size="sm" type="submit">
-                          Hapus
-                        </Button>
-                      </form>
-                    )}
+                    <div className="flex justify-end items-center gap-2">
+                      <ChangePasswordButton userId={user.id} userName={user.name} />
+                      {user.role !== "ADMIN" && (
+                        <form action={deleteUser.bind(null, user.id)}>
+                          <Button variant="destructive" size="sm" type="submit">
+                            Hapus
+                          </Button>
+                        </form>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))
